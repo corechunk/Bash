@@ -1,0 +1,57 @@
+#                                          ==========  ==========  ========== Custom ==========  ==========  ========== 
+#                                          ==========  ==========  ========== Custom ==========  ==========  ========== 
+#                                          ==========  ==========  ========== Custom ==========  ==========  ========== 
+
+
+
+# ========== Environment Path Variables ==========
+export desk="$HOME/Desktop"
+export code="$HOME/Desktop/code"
+export java="$HOME/Desktop/code/java"
+export theme="$HOME/.cache/oh-my-posh/themes/"
+export nvim="$HOME/.config/nvim/"
+export inv="/media/netchunk/Volume/INVENTORY/"
+export inv_codx="$inv/codx"
+export inv_cpp="$inv/codx/cpp"
+export inv_c="$inv/codx/c"
+export inv_bash="$inv/codx/bash"
+export hyprRice="/home/netchunk/.config/hypr/UserConfigs/"
+export temp="$HOME/Downloads/temp"
+export test="$HOME/Downloads/temp"
+export testZone="$HOME/Downloads/temp"
+export PATH="/usr/local/llvm-18/bin:$PATH"
+. "/home/netchunk/.deno/env"
+
+
+
+
+
+# ========== oh-my-posh ==========
+eval "$(oh-my-posh init bash --config $theme/microverse-power2.omp.json)"
+
+# Startups
+#cd $desk
+#fastfetch
+#pokemon-colorscripts -h                #for helf
+
+
+
+
+
+
+## ========== tmux ==========
+
+if [ ! -n "$TMUX" ]; then
+    pokemon-colorscripts -r --no-title
+fi
+
+
+#: <<'END'
+#if command -v tmux >/dev/null 2>&1 && [ -z "$TMUX" ]; then
+#    tmux
+#fi
+#END
+
+#if [[ -z "$TMUX" && -t 0 ]]; then
+#    tmux attach-session -t default || tmux new-session -s default
+#fi
