@@ -1,0 +1,5 @@
+## ========== tmux ==========
+
+if [ ! -n "$TMUX" ]; then
+    pokemon-colorscripts -r --no-title
+fi

@@ -1,0 +1,38 @@
+precheck() {
+  echo "app_dir: $app_dir"
+  echo "inv: $inv"
+}
+#precheck
+
+# ========== Environment Path Variables ==========
+
+# for AppImages
+export app_dir="$HOME/app"
+
+# for coding shortcuts
+export desk="$HOME/Desktop"
+export code="$HOME/Desktop/code"
+export java="$HOME/Desktop/code/java"
+export theme="$HOME/.cache/oh-my-posh/themes/"
+export nvim="$HOME/.config/nvim/"
+export inv="/media/netchunk/Volume/INVENTORY/"
+export inv_codx="$inv/codx"
+export inv_cpp="$inv/codx/cpp"
+export inv_c="$inv/codx/c"
+export inv_bash="$inv/codx/bash"
+export hyprRice="/home/netchunk/.config/hypr/UserConfigs/"
+export temp="$HOME/Downloads/temp"
+export test="$HOME/Downloads/temp"
+export testZone="$HOME/Downloads/temp"
+
+# compiler dir variables
+export clang_compiler="/usr/local/llvm-18/bin"
+
+#  finally add these directories
+export PATH="$app_dir:$clang_compiler:$PATH"
+
+
+# sourcing files
+source "./.scripts_102/tmux"
+source "./.scripts_102/docker"
+source "./.scripts_102/programming"

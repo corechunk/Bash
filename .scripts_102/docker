@@ -1,0 +1,70 @@
+dock_temp(){      # temp container from image
+	temp_image="$1"
+	
+	# default image --> deb_chunk:sid
+	if [[ "$1" == "" ]];then temp_image="deb_chunk:sid";echo "[default]";else echo "[custom]";fi
+
+	echo "running [$temp_image]-->[container]-->[temporary] ..."
+	docker run --rm -it "$temp_image" bash
+}
+
+dock(){      # temp container from image
+	temp_image="$1"
+	temp_name="$2"
+	mode_flag="$3"
+
+	name_flag="--name $temp_name"
+	container_name="container"
+	
+	# default image --> deb_chunk:sid
+	if [[ "$1" == "" ]];then temp_image="deb_chunk:sid";echo "[default]";else echo "[custom]";fi
+
+	# default name 'random'
+        if [[ "$2" == "" ]];then
+            name_flag="";
+        else 
+            container_name="$temp_name";
+        fi
+
+	# default mode 'temporary'
+	if [[ "$mode_flag" == "" || "$mode_flag" == "temp" ]];then
+
+        if [[ "$2" == "" ]];then
+            echo "running [$temp_image]-->[$container_name]-->[temporary] ..."
+            docker run --rm -it "$temp_image" bash
+        else 
+            container_name="$temp_name";
+            echo "running [$temp_image]-->[$container_name]-->[temporary] ..."
+            docker run --rm -it --name "$temp_name" "$temp_image" bash
+        fi
+
+	elif [[ "$mode_flag" == "save" || "$mode_flag" == "new" ]];then
+
+        if [[ "$2" == "" ]];then
+            echo "running [$temp_image]-->[$container_name]-->[Permanent] ..."
+            docker run -it "$temp_image" bash
+        else 
+            container_name="$temp_name";
+            echo "running [$temp_image]-->[$container_name]-->[Permanent] ..."
+            docker run -it --name "$temp_name" "$temp_image" bash
+        fi
+
+            
+	else
+		echo "wrong mode-3: temp or new or save";return 1;
+	fi
+
+}
+dock_old(){
+    echo "running [$(docker ps -a --format '{{.Names}} {{.Image}}' | grep "$1" | awk '{print $2}')]-->[$1]-->[Permanent] ..."
+    docker start -i "$1"
+}
+
+dock_image_update(){
+
+	image="deb_chunk:sid"
+	container="sid_source"
+
+	if docker rmi "$image";then echo "image $image deleted";else "$image isn't available to delete";fi
+	if docker commit "$container" "$image";then echo "image $image [recreated]";else echo "$image [couldn't be recreated]";fi
+}

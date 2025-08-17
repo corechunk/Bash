@@ -1,0 +1,11 @@
+cmproj()
+{
+  if [[ "$1" == "" ]];then echo "must choose folder name through parameter";return 1;fi
+  if git clone https://github.com/Miraj13123/CMake_Defaults.git "$1";then 
+    echo "created project successfully";
+    return 0
+  else
+    echo "failed to create project";
+    return 1;
+  fi
+}
