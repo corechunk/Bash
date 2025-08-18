@@ -122,7 +122,7 @@ copy_bash_scripts() {
     fi
 }
 
-copy_custom_scripts(){   #1 - name   #all problem logged
+copy_custom_script(){   #1 - name   #all problem logged
     local local_script="$SCRIPT_DIR/$1"
     local config_script="$CONFIG_DIR/$1"
 
@@ -133,15 +133,15 @@ copy_custom_scripts(){   #1 - name   #all problem logged
     if [ -f "$config_script" ];then
         echo "$config_script already exists"
         if prompt_user "Do you want to re-copy $config_script?";then
-            cp -f "$local_script" "$config_script" && echo "finished re-copying" && return 0 || echo "failed to re-copy" && return 1;
+            cp -fv "$local_script" "$config_script" && echo "finished re-copying" && return 0 || echo "failed to re-copy" && return 1;
         else
-            echo aborting recopy;return 0;
+            echo aborting recopy;return 2;
         fi
     else
         if prompt_user "Do you want to copy $config_script?";then
-            cp "$local_script" "$config_script" && echo "finished copying" && return 0 || echo "failed to copy" && return 1;
+            cp -v "$local_script" "$config_script" && echo "finished copying" && return 0 || echo "failed to copy" && return 1;
         else
-            echo aborting copy;return 0;
+            echo aborting copy;return 2;
         fi
     fi
 
@@ -171,5 +171,24 @@ copy_scripts_folder(){   #1 - folder name   #all problem logged
 
 }
 
+include_custom_script(){  # $1 file_name ".bashrc"  $2 str "source ~/.bashrc_custom"
+    local target_file="$CONFIG_DIR/$1"
+    local str="$2"
+
+    if [ ! -f "$target_file" ];then echo "$target_file doesn't exist !!";return 1;fi
+
+    if str_finder "$target_file" "$str";then
+        echo "already included";return 2;
+    else
+        echo "$str" >> "$target_file" && echo "included successfilly" && return 0 || echo "failed to include !!" && return 1
+    fi
+
+}
+
+
+# calling functions
 copy_scripts_folder ".scripts_102"
-copy_custom_scripts ".bashrc_custom"
+copy_custom_script ".bashrc_custom"
+include_custom_script ".bashrc" "source \".bashrc_custom\""
+include_custom_script ".profile" "source \".scripts_102/startup\""
+
