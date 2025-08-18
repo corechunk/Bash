@@ -1,0 +1,4 @@
+netchunk ALL=(ALL) NOPASSWD: /bin/mkdir
+netchunk ALL=(ALL) NOPASSWD: /bin/chown
+netchunk ALL=(ALL) NOPASSWD: /bin/mount
+netchunk ALL=(ALL) NOPASSWD: /bin/umount
