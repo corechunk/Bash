@@ -39,6 +39,13 @@ str_finder(){              #           (( 1.2 ))
         return 1
     fi
 }
+str_finder_sudo(){              #           (( 1.2 ))
+    if sudo grep -q "$2" "$1";then
+        return 0
+    else
+        return 1
+    fi
+}
 
 recopy(){
     if [[ -f "$2" ]];then
@@ -171,7 +178,7 @@ copy_scripts_folder(){   #1 - folder name   #all problem logged
 
 }
 
-include_custom_script(){  # $1 file_name ".bashrc"  $2 str "source ~/.bashrc_custom"
+include_custom_str(){  # $1 file_name ".bashrc"  $2 str "source ~/.bashrc_custom"
     local target_file="$CONFIG_DIR/$1"
     local str="$2"
 
@@ -184,11 +191,30 @@ include_custom_script(){  # $1 file_name ".bashrc"  $2 str "source ~/.bashrc_cus
     fi
 
 }
+include_custom_str_sudo(){  # $1 file_name ".bashrc"  $2 str "source ~/.bashrc_custom"
+    local target_file="$1"
+    local str="$2"
+
+    if [ ! -f "$target_file" ];then echo "$target_file doesn't exist !!";return 1;fi
+
+    if str_finder_sudo "$target_file" "$str";then
+        echo "already included";return 2;
+    else
+        echo "$str" | sudo tee -a "$target_file" && echo "included successfilly" && return 0 || echo "failed to include !!" && return 1
+    fi
+
+}
 
 
 # calling functions
 copy_scripts_folder ".scripts_102"
 copy_custom_script ".bashrc_custom"
-include_custom_script ".bashrc" "source \".bashrc_custom\""
-include_custom_script ".profile" "source \".scripts_102/startup\""
+include_custom_str ".bashrc" "source \".bashrc_custom\""
+include_custom_str ".profile" "source \".scripts_102/startup\""
 
+if prompt_user "warning --> wanna make 'mkdir,chown,mount,unmount' work without password ?";then
+    include_custom_str_sudo "/etc/sudoers" "netchunk ALL=(ALL) NOPASSWD: /bin/mkdir"
+    include_custom_str_sudo "/etc/sudoers" "netchunk ALL=(ALL) NOPASSWD: /bin/chown"
+    include_custom_str_sudo "/etc/sudoers" "netchunk ALL=(ALL) NOPASSWD: /bin/mount"
+    include_custom_str_sudo "/etc/sudoers" "netchunk ALL=(ALL) NOPASSWD: /bin/umount"
+fi
