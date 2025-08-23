@@ -1,0 +1,20 @@
+partition_mount() {
+    local device=$1
+    LABEL=$(lsblk -f "$device" | awk 'NR==2 {print $3}')
+    [ -z "$LABEL" ] && { echo "Error: No label found for $device"; return 1; }
+    [ -d "/media/netchunk/$LABEL" ] || { sudo mkdir -p "/media/netchunk/$LABEL"; sudo chown netchunk:netchunk "/media/netchunk/$LABEL"; }
+    findmnt "$device" >/dev/null || { sudo umount "/media/netchunk/$LABEL" 2>/dev/null; sudo mount "$device" "/media/netchunk/$LABEL"; }
+}
+partition_unmount() {
+    local device=$1
+    LABEL=$(lsblk -f "$device" | awk 'NR==2 {print $3}')
+    [ -z "$LABEL" ] && { echo "Error: No label found for $device"; return 1; }
+    if findmnt "$device" >/dev/null; then
+        sudo umount "/media/netchunk/$LABEL" 2>/dev/null
+        if [[ "$?" == "0" ]]; then echo "Unmounted /media/netchunk/$LABEL"; fi
+    else
+        echo "Device $device is not mounted"
+    fi
+}
+partition_mount "/dev/nvme0n1p3"
+#partition_unmount "/dev/nvme0n1p3"
