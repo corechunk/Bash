@@ -209,8 +209,8 @@ include_custom_str_sudo(){  # $1 file_name ".bashrc"  $2 str "source ~/.bashrc_c
 # calling functions
 copy_scripts_folder ".scripts_102"
 copy_custom_script ".bashrc_custom"
-include_custom_str ".bashrc" "source \".bashrc_custom\""
-include_custom_str ".profile" "source \".scripts_102/startup\""
+include_custom_str ".bashrc" "source \"./.bashrc_custom\""
+include_custom_str ".profile" "source \"./.scripts_102/startup\""
 
 if prompt_user "warning --> wanna make 'mkdir,chown,mount,unmount' work without password ?";then
     include_custom_str_sudo "/etc/sudoers" "netchunk ALL=(ALL) NOPASSWD: /bin/mkdir"

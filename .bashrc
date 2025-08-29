@@ -1,1 +1,1 @@
-source ~/.bashrc_custom
+source ./.bashrc_custom
