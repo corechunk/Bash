@@ -14,12 +14,23 @@ export desk="$HOME/Desktop"
 export nvim_conf="$HOME/.config/nvim/"
 
 export inv="/media/netchunk/volume/inv"
-export inv_codx="$inv/codx"
-export inv_cpp="$inv_codx/cpp"
-export inv_c="$inv_codx/c"
-export inv_bash="$inv_codx/bash"
-export inv_md="$inv_codx/md"
+export codx="$inv/codx"
 
+export codxR="$inv/codx/remote"
+export codxL="$inv/codx/local"
+
+export r_proj="$codxR/proj"
+export l_proj="$codxL/proj"
+
+export r_cpp="$codxR/cpp"
+export r_c="$codxR/c"
+export r_bash="$codxR/bash"
+export r_md="$codxR/md"
+
+export l_cpp="$codxL/cpp"
+export l_c="$codxL/c"
+export l_bash="$codxL/bash"
+export l_md="$codxL/md"
 
 export hypr_conf="/home/netchunk/.config/hypr/UserConfigs/"
 export temp="$HOME/.temp/temp"
