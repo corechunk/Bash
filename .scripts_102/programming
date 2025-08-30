@@ -2,7 +2,7 @@
 cmproj()
 {
   if [[ "$1" == "" ]];then echo "must choose folder name through parameter";return 1;fi
-  if git clone https://github.com/Miraj13123/cmake_default.git -b use "$1";then 
+  if git clone https://github.com/corechunk/cmake_default.git -b use "$1";then 
     rm -rf "$1/.git";
     echo "created project successfully";
     return 0
