@@ -46,7 +46,8 @@ export PATH="$app_dir:$clang_compiler:$PATH"
 
 
 # sourcing files
-source "./.scripts_102/tmux"
-source "./.scripts_102/docker"
-source "./.scripts_102/programming"
-source "./.scripts_102/bash"
+source "$HOME/.scripts_102/tmux"
+source "$HOME/.scripts_102/docker"
+source "$HOME/.scripts_102/programming"
+source "$HOME/.scripts_102/bash"
+source "$HOME/.scripts_102/network"

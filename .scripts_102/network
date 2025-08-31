@@ -1,0 +1,92 @@
+
+wifi(){
+    #!/bin/bash
+    # wifi.sh — Simple Wi-Fi connector for Debian minimal installs
+
+    IFACE="wlp1s0"  # change this if your interface name is different
+
+    SSID="$1"
+    PASS="$2"
+
+    if [ -z "$SSID" ] || [ -z "$PASS" ]; then
+        echo "Usage: $0 \"SSID\" \"PASSWORD\""
+        exit 1
+    fi
+
+    CONF="/etc/wpa_supplicant/wpa_supplicant.conf"
+
+    echo "[+] Bringing up interface $IFACE..."
+    sudo ip link set "$IFACE" up
+
+    echo "[+] Creating WPA config for SSID: $SSID"
+    # Generate config safely and overwrite the old one
+    wpa_passphrase "$SSID" "$PASS" | sudo tee "$CONF" > /dev/null
+
+    echo "[+] Starting wpa_supplicant..."
+    sudo pkill wpa_supplicant 2>/dev/null
+    sudo wpa_supplicant -B -i "$IFACE" -c "$CONF"
+
+    echo "[+] Requesting IP address..."
+    if command -v dhclient >/dev/null 2>&1; then
+        sudo dhclient "$IFACE"
+    elif command -v dhcpcd >/dev/null 2>&1; then
+        sudo dhcpcd "$IFACE"
+    else
+        echo "[-] No DHCP client found. Install dhclient or dhcpcd."
+        #exit 1
+    fi
+
+    echo "[+] Wi-Fi connected! Testing connection..."
+    ping -c 3 debian.org && echo "[✓] Success!" || echo "[-] Connection failed."
+
+}
+
+
+
+
+
+wifi2() {
+    IFACE="wlp1s0"  # change if needed
+    SSID="$1"
+    PASS="$2"
+
+    if [ -z "$SSID" ] || [ -z "$PASS" ]; then
+        echo "Usage: wifi \"SSID\" \"PASSWORD\""
+        return 1
+    fi
+
+    CONF="/etc/wpa_supplicant/wpa_supplicant.conf"
+
+    echo "[+] Bringing up interface $IFACE..."
+    sudo ip link set "$IFACE" up
+
+    echo "[+] Creating WPA config for SSID: $SSID"
+    wpa_passphrase "$SSID" "$PASS" | sudo tee "$CONF" >/dev/null
+
+    echo "[+] Restarting wpa_supplicant..."
+    sudo pkill wpa_supplicant 2>/dev/null
+    sudo wpa_supplicant -B -i "$IFACE" -c "$CONF"
+
+    echo "[+] Requesting IP address..."
+    if sudo command -v dhcpcd >/dev/null 2>&1; then
+        echo "  -> Using dhcpcd"
+        sudo dhcpcd "$IFACE"
+    elif sudo command -v dhclient >/dev/null 2>&1; then
+        echo "  -> Using dhclient"
+        sudo dhclient "$IFACE"
+    else
+        echo "[-] No DHCP client found."
+        echo "    Install one with:"
+        echo "      sudo apt install dhcpcd5"
+        echo "      OR sudo apt install isc-dhcp-client"
+        return 1
+    fi
+
+    echo "[+] Wi-Fi connected! Testing connection..."
+    if ping -c 3 debian.org >/dev/null 2>&1; then
+        echo "[✓] Success!"
+    else
+        echo "[-] Connection established but DNS failed."
+        echo "    Try: sudo systemctl restart systemd-resolved"
+    fi
+}
