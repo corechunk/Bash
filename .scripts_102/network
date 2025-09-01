@@ -90,3 +90,188 @@ wifi2() {
         echo "    Try: sudo systemctl restart systemd-resolved"
     fi
 }
+
+
+wifi3() {
+    IFACE="wlp1s0"   # your Wi-Fi interface
+    CONF="/etc/wpa_supplicant/wpa_supplicant.conf"
+
+    case "$1" in
+        list)
+            echo "[+] Scanning for Wi-Fi networks..."
+            # Grab SSIDs, remove duplicates, and number them
+            SSIDS=$(sudo iw dev "$IFACE" scan | grep "SSID:" | sed 's/SSID: //g' | awk '!seen[$0]++')
+            if [ -z "$SSIDS" ]; then
+                echo "[-] No networks found."
+                return 1
+            fi
+            i=1
+            WIFI3_LIST=()
+            while IFS= read -r ssid; do
+                echo "$i) $ssid"
+                WIFI3_LIST[$i]="$ssid"
+                i=$((i+1))
+            done <<< "$SSIDS"
+            export WIFI3_LIST
+            echo "[+] Use: wifi3 <number> \"password\" to connect"
+            ;;
+        *)
+            IDX="$1"
+            PASS="$2"
+
+            if [ -z "$IDX" ] || [ -z "$PASS" ]; then
+                echo "Usage:"
+                echo "  wifi3 list"
+                echo "  wifi3 <number> \"password\""
+                return 1
+            fi
+
+            if [ -z "${WIFI3_LIST[$IDX]}" ]; then
+                echo "[-] No SSID stored for index $IDX"
+                echo "    Run 'wifi3 list' first"
+                return 1
+            fi
+
+            SSID="${WIFI3_LIST[$IDX]}"
+            echo "[+] Connecting to SSID: $SSID"
+
+            echo "[+] Resetting interface $IFACE..."
+            sudo ip link set "$IFACE" down
+            sudo ip link set "$IFACE" up
+
+            echo "[+] Creating WPA config..."
+            wpa_passphrase "$SSID" "$PASS" | sudo tee "$CONF" >/dev/null
+
+            echo "[+] Restarting wpa_supplicant..."
+            sudo pkill wpa_supplicant 2>/dev/null
+            sudo wpa_supplicant -B -i "$IFACE" -c "$CONF"
+
+            echo "[+] Requesting IP address..."
+            if PATH=$PATH:/usr/bin:/sbin:/usr/sbin command -v dhcpcd >/dev/null 2>&1; then
+                echo "  -> Using dhcpcd"
+                sudo dhcpcd -n "$IFACE"
+            elif PATH=$PATH:/usr/bin:/sbin:/usr/sbin command -v dhclient >/dev/null 2>&1; then
+                echo "  -> Using dhclient"
+                sudo dhclient "$IFACE"
+            else
+                echo "[-] No DHCP client found. Install one with:"
+                echo "    sudo apt install dhcpcd5"
+                echo "    OR sudo apt install isc-dhcp-client"
+                return 1
+            fi
+
+            echo "[+] Testing connection..."
+            if ping -c 3 debian.org >/dev/null 2>&1; then
+                echo "[✓] Connected to $SSID"
+            else
+                echo "[-] Connected but DNS failed."
+                echo "    Try: sudo systemctl restart systemd-resolved"
+            fi
+            ;;
+    esac
+}
+
+
+
+wifi4() {
+    local IFACE="wlp1s0"
+    local CONF="/etc/wpa_supplicant/wpa_supplicant.conf"
+    local CACHE_DIR="$HOME/.wifi_cache"
+    local LAST_SCAN="$CACHE_DIR/last_scan.txt"
+
+    # Create cache directory if it doesn't exist
+    mkdir -p "$CACHE_DIR"
+
+    case "$1" in
+        list)
+            echo "[+] Scanning for Wi-Fi networks..."
+            # Bring interface up first
+            sudo ip link set "$IFACE" up
+            # Wait a moment for interface to be ready
+            sleep 2
+            
+            # Get unique SSIDs and store them with index
+            sudo iw dev "$IFACE" scan | grep "SSID:" | sed 's/SSID: //g' | awk '!seen[$0]++' > "$LAST_SCAN"
+            
+            if [ -z "$(cat "$LAST_SCAN")" ]; then
+                echo "[-] No networks found."
+                return 1
+            fi
+            
+            echo "[+] Available networks:"
+            nl -w2 -s') ' "$LAST_SCAN"
+            echo "[+] Use: wifi4 <number> to connect (if password cached)"
+            echo "[+] Or: wifi4 <number> <password> to connect with new password"
+            ;;
+        
+        *)
+            local INDEX="$1"
+            local PASSWORD="$2"
+            
+            if [ -z "$INDEX" ]; then
+                echo "Usage:"
+                echo "  wifi4 list"
+                echo "  wifi4 <number> [password]"
+                return 1
+            fi
+
+            # Get SSID from scanned list (trim whitespace)
+            local SSID=$(sed -n "${INDEX}p" "$LAST_SCAN" 2>/dev/null | sed 's/^[ \t]*//;s/[ \t]*$//')
+            if [ -z "$SSID" ]; then
+                echo "[-] Invalid index. Run 'wifi4 list' first."
+                return 1
+            fi
+
+            # Check if we have a cached password
+            local CACHE_FILE="$CACHE_DIR/$(echo "$SSID" | tr ' ' '_' | tr -cd 'A-Za-z0-9_-').txt"
+            if [ -z "$PASSWORD" ] && [ -f "$CACHE_FILE" ]; then
+                PASSWORD=$(cat "$CACHE_FILE")
+                echo "[+] Using cached password for $SSID"
+            elif [ -z "$PASSWORD" ]; then
+                echo "[-] No password provided and no cached password found for $SSID"
+                echo "    Usage: wifi4 $INDEX <password>"
+                return 1
+            else
+                # Store password in cache
+                echo "$PASSWORD" > "$CACHE_FILE"
+                echo "[+] Password cached for future use"
+            fi
+
+            # Use the same approach as wifi2 which works
+            echo "[+] Bringing up interface $IFACE..."
+            sudo ip link set "$IFACE" up
+
+            echo "[+] Creating WPA config for SSID: $SSID"
+            wpa_passphrase "$SSID" "$PASSWORD" | sudo tee "$CONF" >/dev/null
+
+            echo "[+] Restarting wpa_supplicant..."
+            sudo pkill wpa_supplicant 2>/dev/null
+            sudo wpa_supplicant -B -i "$IFACE" -c "$CONF"
+
+            echo "[+] Requesting IP address..."
+            # Use the same DHCP detection as wifi2
+            if command -v dhcpcd >/dev/null 2>&1; then
+                echo "  -> Using dhcpcd"
+                sudo dhcpcd "$IFACE"
+            elif command -v dhclient >/dev/null 2>&1; then
+                echo "  -> Using dhclient"
+                sudo dhclient "$IFACE"
+            else
+                echo "[-] No DHCP client found."
+                echo "    Install one with:"
+                echo "      sudo apt install dhcpcd5"
+                echo "      OR sudo apt install isc-dhcp-client"
+                return 1
+            fi
+
+            echo "[+] Testing connection..."
+            if ping -c 3 -W 2 google.com >/dev/null 2>&1; then
+                echo "[✓] Successfully connected to $SSID"
+            else
+                echo "[-] Connection established but internet access may be limited"
+                echo "    Interface status:"
+                ip addr show "$IFACE"
+            fi
+            ;;
+    esac
+}
