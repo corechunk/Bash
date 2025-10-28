@@ -6,21 +6,22 @@ precheck() {
 
 # ========== Environment Path Variables ==========
 
-# for AppImages
+# for AppImages [ Directories ]
 export app_dir="$HOME/app"
 
-# for coding shortcuts
+# for coding shortcuts [ Directories ]
 export desk="$HOME/Desktop"
 export nvim_conf="$HOME/.config/nvim/"
 
-export inv="/media/netchunk/volume/inv"
+# personal [ Directories ]
+export inv="/media/netchunk/vol/inv"
 export codx="$inv/codx"
 
-export codxR="$inv/codx/remote"
-export codxL="$inv/codx/local"
+export codxR="$codx/remote"
+export codxL="$codx/local"
 
-export r_proj="$codxR/proj"
-export l_proj="$codxL/proj"
+export projR="$codxR/proj"
+export projL="$codxL/proj"
 
 export r_cpp="$codxR/cpp"
 export r_c="$codxR/c"
