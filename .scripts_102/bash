@@ -1,3 +1,10 @@
+test(){ for((i=0;i<"$1";i++));do pokemon-colorscripts -r;done; }
 export LS_COLORS='di=34:fi=0:ln=36:ex=32:ow=34:tw=34'
 
-test(){ for((i=0;i<"$1";i++));do pokemon-colorscripts -r;done; }
+
+# Make Bash history behave like Zsh
+shopt -s histappend       # Don’t overwrite history on exit
+PROMPT_COMMAND+=("history -a; history -n")
+
+
+
