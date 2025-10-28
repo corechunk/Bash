@@ -1,5 +1,7 @@
 ## ========== tmux ==========
 
-if [ ! -n "$TMUX" ]; then
+if [[ ! -n $TMUX ]]; then
     pokemon-colorscripts -r --no-title
 fi
+
+if [[ -n $TMUX ]];then clear; echo asi; clear; fi
