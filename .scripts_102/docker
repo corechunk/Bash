@@ -88,3 +88,10 @@ dock_image_update(){
 #	
 #	# Alpine
 #	curl -s "https://registry.hub.docker.com/v2/repositories/library/alpine/tags?page_size=100" | grep -oP '"name":\s*"\K[^"]+'
+
+
+#  archlinux:tag
+#   base          → minimal Arch base
+#   base-devel    → base + dev tools
+#   multilib-devel → base-devel + multilib/32-bit support
+#   latest        → points to current default (usually same as base unless updated)
