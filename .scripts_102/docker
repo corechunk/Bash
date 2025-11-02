@@ -68,3 +68,23 @@ dock_image_update(){
 	if docker rmi "$image";then echo "image $image deleted";else "$image isn't available to delete";fi
 	if docker commit "$container" "$image";then echo "image $image [recreated]";else echo "$image [couldn't be recreated]";fi
 }
+
+
+
+
+
+#	Docker image's variant
+#	# Debian
+#	curl -s "https://registry.hub.docker.com/v2/repositories/library/debian/tags?page_size=100" | grep -oP '"name":\s*"\K[^"]+'
+#	
+#	# Ubuntu
+#	curl -s "https://registry.hub.docker.com/v2/repositories/library/ubuntu/tags?page_size=100" | grep -oP '"name":\s*"\K[^"]+'
+#	
+#	# Fedora
+#	curl -s "https://registry.hub.docker.com/v2/repositories/library/fedora/tags?page_size=100" | grep -oP '"name":\s*"\K[^"]+'
+#	
+#	# Arch Linux
+#	curl -s "https://registry.hub.docker.com/v2/repositories/library/archlinux/tags?page_size=100" | grep -oP '"name":\s*"\K[^"]+'
+#	
+#	# Alpine
+#	curl -s "https://registry.hub.docker.com/v2/repositories/library/alpine/tags?page_size=100" | grep -oP '"name":\s*"\K[^"]+'
