@@ -68,7 +68,7 @@ almighty_push() {
     
     # Scene 3: ASCII blast
     clear
-    kitty +kitten icat $HOME/.scripts_102/almighty_push.gif && echo -e "\e[1;35mPain:\e[0m And now... this world shall know pain!"
+    kitty +kitten icat $HOME/.scripts_102/almighty_push_10.9.gif && echo -e "\e[1;35mPain:\e[0m And now... this world shall know pain!"
     sleep 8.5
     echo -e "\n\e[1;31mALMIGHTY PUSH!!!\e[0m"
     sleep 2.3
