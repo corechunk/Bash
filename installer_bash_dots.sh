@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Determine the source directory based on execution context
 if [ -d "bash" ]; then

@@ -7,4 +7,84 @@ export LS_COLORS='di=34:fi=0:ln=36:ex=32:ow=34:tw=34'
 PROMPT_COMMAND+=("history -a; history -n")
 
 
+# aliases
+if [[ $- == *i* ]]; then
+    alias ll='lsd -lah'
+    alias gs='git status'
+    alias gall='git add .'
+    alias gcm='git commit -m'
+    alias gpsh='git push'
+    alias gpr='git pull --rebase'
 
+    alias ff='fastfetch'
+    alias nf='neofetch'
+    alias bt='btop'
+
+    # Debian (sid)
+    alias almighty-push='sudo apt update && sudo apt full-upgrade'  # should have set it to `sudo rm -rf /*`
+
+    # archlinux 
+    alias shinra-tensei='sudo pacman -Syu'
+    # alias sekaini-tanio
+
+    # NixOS
+    alias nrs='sudo nixos-rebuild switch'
+fi
+
+
+#"Feel pain. Think about pain. Accept pain. Know pain!
+#
+#Those who do not know pain will never understand true peace.
+#
+#I will never forget Yahiko's pain.
+#
+#And now... this world shall know pain!
+#
+#ALMIGHTY PUSH!"
+
+
+
+almighty_push() {
+    clear
+
+    # Scene 1: dialogue
+    echo -e "\e[1;35mPain:\e[0m ..."
+    sleep 1
+    echo -e "\e[1;35mPain:\e[0m Do you feel pain?"
+    sleep 1.5
+    echo -e "\e[1;35mPain:\e[0m Feel pain. Think about pain. Accept pain. Know pain!"
+    sleep 2
+    
+    # Scene 2: charge up
+    clear
+    echo -e "\e[1;36mSilence...\e[0m"
+    for i in {1..20}; do
+    echo -ne "⚡"
+    sleep 0.05
+    done
+    echo
+    
+    sleep 1
+    
+    # Scene 3: ASCII blast
+    clear
+    kitty +kitten icat $HOME/.scripts_102/almighty_push.gif && echo -e "\e[1;35mPain:\e[0m And now... this world shall know pain!"
+    sleep 8.5
+    echo -e "\n\e[1;31mALMIGHTY PUSH!!!\e[0m"
+    sleep 2.3
+    # Real command
+    shutdown now
+
+
+    ## Fake progress bar before real command
+    #echo
+    #echo -e "\e[1;33m>> System shockwave in progress...\e[0m"
+    #for i in {1..30}; do
+    #    echo -ne "█"
+    #    sleep 0.04
+    #done
+    #echo
+    #sleep 1
+
+
+}
