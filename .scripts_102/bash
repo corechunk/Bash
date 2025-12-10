@@ -36,7 +36,7 @@ fi
 #
 #Those who do not know pain will never understand true peace.
 #
-#I will never forget Yahiko's pain.
+#I will never forget the pain that Yahiko's pain.
 #
 #And now... this world shall know pain!
 #
@@ -47,33 +47,64 @@ fi
 almighty_push() {
     clear
 
-    # Scene 1: dialogue
-    echo -e "\e[1;35mPain:\e[0m ..."
-    sleep 1
-    echo -e "\e[1;35mPain:\e[0m Do you feel pain?"
-    sleep 1.5
-    echo -e "\e[1;35mPain:\e[0m Feel pain. Think about pain. Accept pain. Know pain!"
-    sleep 2
-    
-    # Scene 2: charge up
-    #clear
-    #echo -e "\e[1;36mSilence...\e[0m"
-    #for i in {1..20}; do
-    #echo -ne "⚡"
-    #sleep 0.05
-    #done
-    #echo
-    #sleep 1
-    
-    
-    # Scene 3: ASCII blast
-    kitty +kitten icat $HOME/.scripts_102/almighty_push_10.9.gif && echo -e "\e[1;35mPain:\e[0m And now... this world shall know pain!"
-    sleep 12.5
-    echo -e "\n\e[1;31mALMIGHTY PUSH!!!\e[0m"
-    sleep 2.5
-    # Real command
-    #reset
-    shutdown now
+    local mode
+    if [[ $1 == "sub" ]];then
+        mode="sub"
+    elif [[ $1 == * ]];then
+        mode=small
+    fi
+
+    kitty +kitten icat $HOME/.scripts_102/almighty_push_$mode.gif && reset
+
+
+    case $mode in
+    sub)
+        echo -e "\e[1;35mPain:\e[0m Feel pain, Accept pain and Know pain!"
+        sleep 2
+        echo -e "\e[1;35mPain:\e[0m Those who do not know pain will never understand true peace."
+        sleep 2
+        echo -e "\e[1;35mPain:\e[0m I will never forget the pain that Yahiko's pain."
+        sleep 1
+        kitty +kitten icat $HOME/.scripts_102/almighty_push_$mode.gif && echo -e "\e[1;35mPain:\e[0m And now... this world shall know pain!"
+        sleep 12
+        echo -ne "\n\e[1;31mALMIGHTY "
+        sleep 1
+        echo -e "PUSH!!!\e[0m"
+        sleep 2.5
+    ;;
+    small)
+        echo -e "\e[1;35mPain:\e[0m Feel pain, Accept pain and Know pain!"
+        sleep 2
+        echo -e "\e[1;35mPain:\e[0m Those who do not know pain will never understand true peace."
+        sleep 2
+        echo -e "\e[1;35mPain:\e[0m I will never forget the pain that Yahiko's pain."
+        sleep 2
+        echo -e "\e[1;35mPain:\e[0m And now... this world shall know pain!"
+        sleep 2
+        kitty +kitten icat $HOME/.scripts_102/almighty_push_$mode.gif
+        sleep 3
+        echo -ne "\n\e[1;31mALMIGHTY "
+        sleep 1.5
+        echo -e "PUSH!!!\e[0m"
+        sleep 1
+    ;;
+    esac
+
+    reset
+    #shutdown now
+
+
+}
+
+        # Scene 2: charge up
+        #clear
+        #echo -e "\e[1;36mSilence...\e[0m"
+        #for i in {1..20}; do
+        #echo -ne "⚡"
+        #sleep 0.05
+        #done
+        #echo
+        #sleep 1
 
 
     ## Fake progress bar before real command
@@ -85,6 +116,3 @@ almighty_push() {
     #done
     #echo
     #sleep 1
-
-
-}
