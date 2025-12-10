@@ -6,6 +6,13 @@ export LS_COLORS='di=34:fi=0:ln=36:ex=32:ow=34:tw=34'
 #shopt -s histappend       # Don’t overwrite history on exit
 PROMPT_COMMAND+=("history -a; history -n")
 
+mode=tui # needed for some sourced func to work and also they need dialog
+base_funcs_file="$HOME/linutils/base/base.sh"
+if [ -f $base_funcs_file ];then
+    source $base_funcs_file
+fi
+
+
 
 # aliases
 if [[ $- == *i* ]]; then
@@ -17,6 +24,8 @@ if [[ $- == *i* ]]; then
     alias gpr='git pull --rebase'
 
     alias ff='fastfetch'
+    alias cc='clear'  # don't need cc for gcc also its for interactive session only
+    alias rr='reset'
     alias nf='neofetch'
     alias bt='btop'
 
@@ -91,7 +100,7 @@ almighty_push() {
     esac
 
     reset
-    #shutdown now
+    shutdown now
 
 
 }
