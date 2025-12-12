@@ -11,7 +11,10 @@ base_funcs_file="$HOME/linutils/base/base.sh"
 if [ -f $base_funcs_file ];then
     source $base_funcs_file
 fi
-
+base_funcs_file="$HOME/linutils/base/ascii.sh"
+if [ -f $base_funcs_file ];then
+    source $base_funcs_file
+fi
 
 
 # aliases
