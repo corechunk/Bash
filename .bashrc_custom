@@ -14,7 +14,7 @@ export desk="$HOME/Desktop"
 export nvim_conf="$HOME/.config/nvim/"
 
 # personal [ Directories ]
-export inv="$HOME/part1/inv"  # a symlink to the actual part1 mounted somewhere in /media
+export inv="/run/media/part1/inv"  # a symlink to the actual part1 mounted somewhere in /media
 export codx="$inv/codx"
 
 export codxR="$codx/remote"

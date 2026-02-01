@@ -19,6 +19,9 @@ fi
 
 # aliases
 if [[ $- == *i* ]]; then
+    alias bash_tube='curl ysap.sh/help'
+    alias ysap='curl ysap.sh/help'
+
     alias ll='lsd -lah'
     alias gs='git status'
     alias gall='git add .'

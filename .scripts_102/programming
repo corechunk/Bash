@@ -16,7 +16,7 @@ cmproj_cpp()
 cmproj_c()
 {
   if [[ "$1" == "" ]];then echo "must choose folder name through parameter";return 1;fi
-  if git clone https://github.com/corechunk/cmake_default_c.git -b use "$1";then 
+  if git clone https://github.com/corechunk/cmake_default_c.git "$1";then 
     rm -rf "$1/.git";
     echo "created project successfully";
     return 0
